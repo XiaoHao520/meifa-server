@@ -22,6 +22,7 @@ use app\models\YyForm;
 use app\models\YyGoods;
 use app\models\YyGoodsPic;
 use app\models\YyOrderComment;
+use app\models\YyService;
 use app\modules\api\models\Model;
 use yii\data\Pagination;
 use yii\db\Query;
@@ -96,7 +97,7 @@ class YyGoodsForm extends Model
             ->andWhere(['is_delete'=>0,'store_id'=>$this->store_id,'status'=>1,'id'=>$this->gid])->one();
         $service_count=YyForm::find()->where(['goods_id'=>$this->gid,'is_delete'=>0])->count();
 
-        $goods_service=YyGoods::find()->from(YyGoods::tableName().'g')->select(['g.*','f.*'])->leftJoin(YyForm::tableName().'f','g.id=f.goods_id')->andWhere(['g.is_delete'=>0,'g.store_id'=>$this->store_id,'g.status'=>1,'g.id'=>$this->gid,'f.is_delete'=>0])->limit(3)->asArray()->all();
+        $goods_service=YyGoods::find()->from(YyGoods::tableName().'g')->select(['g.*','s.*'])->leftJoin(YyService::tableName().'s','g.id=s.goods_id')->andWhere(['g.is_delete'=>0,'g.store_id'=>$this->store_id,'g.status'=>1,'g.id'=>$this->gid,'s.is_delete'=>0])->limit(3)->asArray()->all();
         if (!$info){
             return [
                 'code'  => 1,
@@ -146,7 +147,7 @@ class YyGoodsForm extends Model
             'data'  => [
                 'info' => $info,
                 'shopList' => $shopList,
-                'goods_form'=>$goods_service,
+                'goods_service'=>$goods_service,
                 'service_count'=>$service_count
             ],
         ];
