@@ -436,6 +436,85 @@ if (!$returnUrl)
 
                 <div class="step-block" flex="dir:left box:first">
                     <div>
+                        <span>服务表单</span>
+                        <span class="step-location" id="step3"></span>
+                    </div>
+                    <div>
+                        <div class="form-group row">
+                            <div class="col-3 text-right required">
+                                <label class="col-form-label">服务表单</label>
+                            </div>
+                            <div class="col-9">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <td>类型</td>
+                                        <td>名称</td>
+                                        <td>设置</td>
+                                        <td></td>
+                                    </tr>
+                                    </thead>
+                                    <col style="width: 30%;">
+                                    <col style="width: 30%;">
+                                    <col style="width: 40%;">
+                                    <tbody>
+                                    <template v-for="(item,index) in service_list">
+                                          <tr>
+                                            <td class="mb-1">
+                                                单行文本
+                                                <input type="hidden" v-model="item.id" class="form-control"
+                                                       :name="'model[service_list]['+index+'][id]'">
+
+                                            </td>
+                                            <td><input type="text" v-model="item.type_name" class="form-control"
+                                                       :name="'model[service_list]['+index+'][type_name]'"></td>
+                                            <td>
+                                                <div class="mb-4">
+                                                    <span class="mr-4">服务名</span><input type="text"
+                                                                                          v-model="item.service_name"
+                                                                                          class="form-control"
+                                                                                          :name="'model[service_list]['+index+'][service_name]'">
+                                                </div>
+                                                <div class="mb-4">
+                                                    <span class="mr-4">价格</span><input type="text" v-model="item.price"
+                                                                                       class="form-control"
+                                                                                       :name="'model[service_list]['+index+'][price]'">
+                                                </div>
+                                            </td>
+                                            <td>
+<!--                                                <a class="btn btn-sm btn-primary form-prev" :data-index="index"-->
+<!--                                                   v-if="index>0"-->
+<!--                                                   href="javascript:">上移</a>-->
+<!--                                                <a class="btn btn-sm btn-primary form-next" :data-index="index"-->
+<!--                                                   v-if="index<form_list.length-1"-->
+<!--                                                   href="javascript:">下移</a>-->
+                                                <a class="btn btn-sm btn-danger service-del" :data-index="index"
+                                                   href="javascript:">删除</a>
+                                            </td>
+                                          </tr>
+                                    </template>
+                                    <template>
+                                        <tr>
+                                            <td colspan="2">
+                                                <select class="form-control form-add-type">
+                                                    <option value="text">单行文本</option>
+                                                </select>
+                                            </td>
+                                            <td colspan="2" style="text-align: right">
+                                                <a class="btn btn-sm btn-primary service-add" href="javascript:">添加一个字段</a>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="step-block" flex="dir:left box:first">
+                    <div>
                         <span>自定义表单</span>
                         <span class="step-location" id="step3"></span>
                     </div>
@@ -775,8 +854,11 @@ if (!$returnUrl)
         el: "#app",
         data: {
             form_list: <?=$form_list?>,
+            service_list: <?=$service_list?>,
         }
     });
+
+    console.log(app.form_list)
 </script>
 
 <script>
@@ -818,6 +900,14 @@ if (!$returnUrl)
                 break;
             }
         }
+        var service_list = app.service_list;
+        for (var i in service_list) {
+            if (!service_list[i].name || service_list[i] == undefined) {
+                is_submit = false;
+                break;
+            }
+        }
+
         if (!is_submit) {
             btn.btnReset();
             $.myAlert({
@@ -825,6 +915,8 @@ if (!$returnUrl)
             });
             return;
         }
+
+        console.log(form.serialize())
         $.ajax({
             url: form.attr("action"),
             type: form.attr("method"),
@@ -855,6 +947,11 @@ if (!$returnUrl)
     });
 </script>
 <script>
+
+    $(document).on('click', '.service-del', function () {
+        var index = $(this).data('index');
+        app.service_list.splice(index, 1);
+    });
     $(document).on('click', '.form-del', function () {
         var index = $(this).data('index');
         app.form_list.splice(index, 1);
@@ -884,5 +981,20 @@ if (!$returnUrl)
         aa.type = $('.form-add-type').val();
         aa.name = $('.form-add-type').val();
         app.form_list.push(aa);
+
+        console.log(app.form_list);
     });
+
+    $(document).on('click', '.service-add', function () {
+        var ss = {};
+        ss.type_name = '类型名称';
+        ss.name = '服务';
+        app.service_list.push(ss);
+        console.log(app.service_list);
+    });
+
+
+
+
+
 </script>

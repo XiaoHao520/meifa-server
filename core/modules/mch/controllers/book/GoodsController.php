@@ -13,6 +13,7 @@ use app\models\PostageRules;
 use app\models\YyCat;
 use app\models\YyForm;
 use app\models\YyGoods;
+use app\models\YyService;
 use app\modules\mch\models\book\YyCatForm;
 use app\modules\mch\models\book\YyGoodsForm;
 
@@ -109,7 +110,7 @@ class GoodsController extends Controller
     {
         $goods = YyGoods::findOne(['id'=>$id,'is_delete'=>0,'store_id'=>$this->store->id]);
         $form_list = YyForm::find()->where(['store_id'=>$this->store->id,'goods_id'=>$id,'is_delete'=>0])->orderBy(['sort'=>SORT_ASC])->asArray()->all();
-
+       $service_list=YyService::find()->where(['goods_id'=>$id,'is_delete'=>0])->asArray()->all();
         if (!$goods){
             $goods = new YyGoods();
         }
@@ -131,6 +132,8 @@ class GoodsController extends Controller
             'goods'  => $goods,
             'cat'   => $ptCat,
             'form_list' => json_encode($form_list,JSON_UNESCAPED_UNICODE),
+            'service_list' => json_encode($service_list,JSON_UNESCAPED_UNICODE),
+
         ]);
     }
 
@@ -243,7 +246,5 @@ class GoodsController extends Controller
             }
         }
     }
-
-
 
 }

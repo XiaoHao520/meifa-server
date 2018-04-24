@@ -16,31 +16,28 @@ use app\models\PtGoodsPic;
 use app\models\YyForm;
 use app\models\YyGoods;
 use app\models\YyGoodsPic;
+use app\models\YyService;
 use app\modules\mch\models\Model;
 use yii\data\Pagination;
 
 class YyGoodsForm extends Model
 {
     public $goods;
-
     public $goods_pic_list;
-
     public $name;
     public $store_id;
     public $original_price;
     public $price;
     public $detail;
     public $cat_id;
-
     public $service;
     public $sort;
     public $virtual_sales;
     public $cover_pic;
-
     public $shop_id;
     public $label;
-
     public $form_list = [];
+    public $service_list=[];
 
 
     /**
@@ -55,7 +52,7 @@ class YyGoodsForm extends Model
             [['cat_id', 'sort', 'virtual_sales', 'store_id'], 'integer'],
             [['name','shop_id'], 'string', 'max' => 255],
             [['service'], 'string', 'max' => 2000],
-            [['goods_pic_list','form_list',], 'safe',],
+            [['goods_pic_list','form_list','service_list'], 'safe',],
             [['virtual_sales'], 'default', 'value' => 0]
         ];
     }
@@ -158,6 +155,7 @@ class YyGoodsForm extends Model
                 }
 
                 YyForm::updateAll(['is_delete' => 1], ['goods_id'=>$goods->id]);
+
                 foreach ($this->form_list AS $form){
                     $form_list = new YyForm();
                     $form_list->goods_id = $goods->id;
@@ -172,7 +170,16 @@ class YyGoodsForm extends Model
                     $form_list->addtime = time();
                     $form_list->save();
                 }
-
+                YyService::updateAll(['is_delete' => 1], ['goods_id'=>$goods->id]);
+                foreach ($this->service_list AS $form){
+                    $service_list = new YyService();
+                    $service_list->goods_id = $goods->id;
+                    $service_list->type_name = $form['type_name'];
+                    $service_list->service_name = $form['service_name'];
+                    $service_list->price=$form['price'];
+                    $service_list->is_delete=0;
+                    $service_list->save();
+                }
                 return [
                     'code' => 0,
                     'msg' => '保存成功',
@@ -184,9 +191,4 @@ class YyGoodsForm extends Model
             return $this->getModelError();
         }
     }
-
-
-
-
-
 }

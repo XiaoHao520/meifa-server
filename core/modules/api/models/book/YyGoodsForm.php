@@ -18,11 +18,13 @@ use app\models\PtOrderComment;
 use app\models\PtOrderDetail;
 use app\models\Shop;
 use app\models\User;
+use app\models\YyForm;
 use app\models\YyGoods;
 use app\models\YyGoodsPic;
 use app\models\YyOrderComment;
 use app\modules\api\models\Model;
 use yii\data\Pagination;
+use yii\db\Query;
 
 class YyGoodsForm extends Model
 {
@@ -45,7 +47,12 @@ class YyGoodsForm extends Model
         $page = \Yii::$app->request->get('page')?:1;
         $limit = (int)\Yii::$app->request->get('limit')?:6;
         $cid = \Yii::$app->request->get('cid');
-        $query = YyGoods::find()
+
+
+        /* $query=new Query();
+         $query->select(['hjmall_yy_goods.*'])->from('hjmall_yy_goods')->leftJoin('hjmall_yy_form','hjmall_yy_goods.id=hjmall_yy_form.goods_id')->where(['hjmall_yy_goods.is_delete'=>0,'hjmall_yy_form.is_delete'=>0,'hjmall_yy_goods.store_id'=>$this->store_id,'hjmall_yy_goods.status'=>1]);*/
+
+         $query = YyGoods::find()
               ->andWhere(['is_delete' => 0, 'store_id' => $this->store_id, 'status' => 1]);
         if ((int)$cid){
             // 分类
@@ -87,6 +94,9 @@ class YyGoodsForm extends Model
             ->one();
         $goods = YyGoods::find()
             ->andWhere(['is_delete'=>0,'store_id'=>$this->store_id,'status'=>1,'id'=>$this->gid])->one();
+        $service_count=YyForm::find()->where(['goods_id'=>$this->gid,'is_delete'=>0])->count();
+
+        $goods_service=YyGoods::find()->from(YyGoods::tableName().'g')->select(['g.*','f.*'])->leftJoin(YyForm::tableName().'f','g.id=f.goods_id')->andWhere(['g.is_delete'=>0,'g.store_id'=>$this->store_id,'g.status'=>1,'g.id'=>$this->gid,'f.is_delete'=>0])->limit(3)->asArray()->all();
         if (!$info){
             return [
                 'code'  => 1,
@@ -136,6 +146,8 @@ class YyGoodsForm extends Model
             'data'  => [
                 'info' => $info,
                 'shopList' => $shopList,
+                'goods_form'=>$goods_service,
+                'service_count'=>$service_count
             ],
         ];
     }

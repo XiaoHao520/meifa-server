@@ -19,6 +19,7 @@ use Yii;
  * @property integer $is_delete
  * @property integer $addtime
  * @property string $option
+
  */
 class YyForm extends \yii\db\ActiveRecord
 {
@@ -38,6 +39,7 @@ class YyForm extends \yii\db\ActiveRecord
         return [
             [['store_id', 'goods_id', 'required', 'sort', 'is_delete', 'addtime'], 'integer'],
             [['option'], 'string'],
+            ['default','value'=>0],
             [['name', 'type', 'default', 'tip'], 'string', 'max' => 255],
         ];
     }
