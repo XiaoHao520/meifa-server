@@ -281,6 +281,16 @@ if (!$returnUrl)
                                        value="<?= $goods['declaration'] ?>">
                             </div>
                         </div>
+
+                        <div class="form-group row">
+                            <div class="col-3 text-right">
+                                <label class=" col-form-label required">导航序号</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control short-row" type="text" name="model[nav_index]"
+                                       value="<?= $goods['nav_index'] ?>">
+                            </div>
+                        </div>
                         <div class="form-group row">
                             <div class="col-3 text-right">
                                 <label class=" col-form-label">商品排序</label>

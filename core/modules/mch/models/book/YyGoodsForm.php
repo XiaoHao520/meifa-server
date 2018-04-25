@@ -39,6 +39,7 @@ class YyGoodsForm extends Model
     public $form_list = [];
     public $service_list=[];
     public $declaration;
+    public $nav_index;
 
     /**
      * @inheritdoc
@@ -49,7 +50,7 @@ class YyGoodsForm extends Model
             [['name', 'price', 'original_price', 'detail', 'service', 'store_id'], 'required'],
             [['price', 'original_price'], 'number'],
             [['detail', 'cover_pic','label'], 'string'],
-            [['cat_id', 'sort', 'virtual_sales', 'store_id'], 'integer'],
+            [['cat_id', 'sort', 'virtual_sales', 'store_id','nav_index'], 'integer'],
             [['name','shop_id'], 'string', 'max' => 255],
             [['service','declaration'], 'string', 'max' => 2000],
             [['goods_pic_list','form_list','service_list'], 'safe',],
@@ -80,7 +81,8 @@ class YyGoodsForm extends Model
             'sales' => '实际销量',
             'shop_id' => '门店id',
             'store_id' => 'Store ID',
-            'label'=>'标签'
+            'label'=>'标签',
+            'nav_index'=>'导航序号'
         ];
     }
 
@@ -142,10 +144,9 @@ class YyGoodsForm extends Model
                 $goods->sales = 0;
             }
             $goods->declaration=$this->declaration;
+            $goods->nav_index=$this->nav_index;
             $goods->attributes = $this->attributes;
-
             $prizes=[];
-
             foreach ($this->form_list AS $form){
 
                 $data= array('year'=>$form['default'],'prize'=>$form['tip']);
@@ -172,7 +173,6 @@ class YyGoodsForm extends Model
                     $form_list->required = $form['required'];
                     $form_list->default = $form['default'];
                     $form_list->tip = $form['tip'];
-
                     $form_list->sort = $form['sort'];
                     $form_list->is_delete = 0;
                     $form_list->addtime = time();

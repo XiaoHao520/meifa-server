@@ -48,14 +48,9 @@ class YyGoodsForm extends Model
         $page = \Yii::$app->request->get('page')?:1;
         $limit = (int)\Yii::$app->request->get('limit')?:6;
         $cid = \Yii::$app->request->get('cid');
-
-
-        /* $query=new Query();
-         $query->select(['hjmall_yy_goods.*'])->from('hjmall_yy_goods')->leftJoin('hjmall_yy_form','hjmall_yy_goods.id=hjmall_yy_form.goods_id')->where(['hjmall_yy_goods.is_delete'=>0,'hjmall_yy_form.is_delete'=>0,'hjmall_yy_goods.store_id'=>$this->store_id,'hjmall_yy_goods.status'=>1]);*/
-       // $goods_service=YyGoods::find()->from(YyGoods::tableName().'g')->select(['g.*','s.*'])->leftJoin(YyService::tableName().'s','g.id=s.goods_id')->andWhere(['g.is_delete'=>0,'g.store_id'=>$this->store_id,'g.status'=>1,'g.id'=>$this->gid,'s.is_delete'=>0])->limit(3)->asArray()->all();
-
+        $nav=\Yii::$app->request->get('nav_index');
          $query = YyGoods::find()
-              ->andWhere(['is_delete' => 0, 'store_id' => $this->store_id, 'status' => 1]);
+              ->andWhere(['is_delete' => 0, 'store_id' => $this->store_id, 'status' => 1,'nav_index'=>$nav]);
 
 
         if ((int)$cid){

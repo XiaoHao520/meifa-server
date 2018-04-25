@@ -26,6 +26,7 @@ use Yii;
  * @property string $label
  * @property string $prize
  * @property string $declaration
+ * @property integer $nav_index
  */
 class YyGoods extends \yii\db\ActiveRecord
 {
@@ -46,7 +47,7 @@ class YyGoods extends \yii\db\ActiveRecord
             [['name', 'price', 'original_price', 'detail', 'service', 'store_id'], 'required'],
             [['price', 'original_price'], 'number'],
             [['detail', 'cover_pic','label','prize'], 'string'],
-            [['cat_id', 'status', 'sort', 'virtual_sales', 'addtime', 'is_delete', 'sales', 'store_id'], 'integer'],
+            [['cat_id', 'status', 'sort', 'virtual_sales', 'addtime', 'is_delete', 'sales', 'store_id','nav_index'], 'integer'],
             [['name','shop_id','declaration'], 'string', 'max' => 255],
             [['service'], 'string', 'max' => 2000],
         ];
@@ -76,7 +77,8 @@ class YyGoods extends \yii\db\ActiveRecord
             'store_id' => 'Store ID',
             'label'=>'标签',
             'prize'=>'奖项',
-            'declaration'=>'宣言'
+            'declaration'=>'宣言',
+            'nav_index'=>'导航序号'
         ];
     }
 
