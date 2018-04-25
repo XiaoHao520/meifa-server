@@ -16,6 +16,7 @@ use app\models\YyFormId;
 use app\models\YyGoods;
 use app\models\YyOrder;
 use app\models\YyOrderForm;
+use app\models\YyService;
 use app\models\YyWechatTplMsgSender;
 use app\modules\api\models\Model;
 
@@ -23,17 +24,14 @@ class OrderPreviewFrom extends Model
 {
     public $store_id;
     public $user_id;
-
     public $goods_id;
-
     public $form_list;
     public $form_id;
-
     public $pay_type = 'WECHAT_PAY';
-
     private $wechat;
     private $order;
     private $user;
+    public $datetime;
 
     public function search()
     {
@@ -47,6 +45,9 @@ class OrderPreviewFrom extends Model
             ->orderBy('sort DESC')
             ->asArray()
             ->all();
+        $goods_service=YyGoods::find()->from(YyGoods::tableName().'g')->select(['g.name','s.*'])->leftJoin(YyService::tableName().'s','g.id=s.goods_id')->andWhere(['g.is_delete'=>0,'g.store_id'=>$this->store_id,'g.status'=>1,'g.id'=>$this->goods_id,'s.is_delete'=>0])->limit(3)->asArray()->all();
+
+
         foreach ($formList AS $k => $v){
             if ($v['type'] == 'radio' || $v['type'] == 'checkbox'){
 //                $formList[$k]['default'] = explode(',' , $v['default']);
@@ -71,6 +72,7 @@ class OrderPreviewFrom extends Model
             'data'  => [
                 'goods'     => $goods,
                 'form_list' => $formList,
+                'service_list'=>$goods_service
             ],
         ];
     }
@@ -87,6 +89,19 @@ class OrderPreviewFrom extends Model
             ];
         }
 
+         $is_exist=YyOrder::find()->where(['goods_id'=>$this->goods_id,'datetime'=>$this->datetime])->exists();
+
+         if($is_exist){
+             return [
+                 'code'  => 1,
+                 'msg'   => '师傅这个时段已经被预约,请更换时段或者日期',
+                 'is_exist'=>$is_exist
+             ];
+         }
+
+
+
+
         $p = \Yii::$app->db->beginTransaction();
 
         $this->user = User::findOne(['id' => $this->user_id, 'type' => 1, 'is_delete' => 0]);
@@ -96,6 +111,7 @@ class OrderPreviewFrom extends Model
         $order->goods_id = $goods->id;
         $order->user_id  = $this->user_id;
         $order->order_no = $this->getOrderNo();
+        $order->datetime=$this->datetime;
         $order->total_price = $goods->price;
         $order->pay_price = $goods->price;
         $order->is_pay = 0;
@@ -104,40 +120,20 @@ class OrderPreviewFrom extends Model
         $order->addtime = time();
         $order->is_delete = 0;
         $order->form_id = $this->form_id;
+
         if ($order->save()) {
             $goods->sales ++;
             $goods->save();
             foreach ($this->form_list AS $key => $value)
             {
-                if ($value['required'] ==1 && $value['default'] == ''){
-                    return [
-                        'code'    => 1,
-                        'msg'     => $value['name'].'不能为空',
-                    ];
-                }
-                if ($value['type']== 'radio' || $value['type']== 'checkbox'){
-                    $default = [];
-                    foreach ($value['default'] AS $k => $v){
-                        if ($v['selected']==true){
-                            $default[$k] = $v['name'];
-                        }
-                    }
-                    $value['default'] = implode($default,',');
-                    if ($value['required'] ==1 && empty($value['default'])){
-                        return [
-                            'code'    => 1,
-                            'msg'     => $value['name'].'不能为空',
-                        ];
-                    }
-                }
 
                 $formList = new YyOrderForm();
                 $formList->store_id = $this->store_id;
                 $formList->goods_id = $goods->id;
                 $formList->user_id  = $this->user_id;
                 $formList->order_id = $order->id;
-                $formList->key      = $value['name'];
-                $formList->value    = $value['default'];
+                $formList->key      = $value['key'];
+                $formList->value    = $value['value'];
                 $formList->is_delete= 0;
                 $formList->addtime  = time();
 

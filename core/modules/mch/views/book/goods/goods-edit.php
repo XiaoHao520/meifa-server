@@ -274,6 +274,15 @@ if (!$returnUrl)
                         </div>
                         <div class="form-group row">
                             <div class="col-3 text-right">
+                                <label class=" col-form-label required">商品宣言</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="form-control short-row" type="text" name="model[declaration]"
+                                       value="<?= $goods['declaration'] ?>">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-3 text-right">
                                 <label class=" col-form-label">商品排序</label>
                             </div>
                             <div class="col-9">
@@ -555,13 +564,13 @@ if (!$returnUrl)
                                                        :name="'model[form_list]['+index+'][required]'"></td>
                                             <td>
                                                 <div class="mb-2">
-                                                    <span class="mr-2">设置默认值</span><input type="text"
+                                                    <span class="mr-2">获奖年</span><input type="text"
                                                                                           v-model="item.default"
                                                                                           class="form-control"
                                                                                           :name="'model[form_list]['+index+'][default]'">
                                                 </div>
                                                 <div class="mb-2">
-                                                    <span class="mr-2">提示语</span><input type="text" v-model="item.tip"
+                                                    <span class="mr-2">获奖名称</span><input type="text" v-model="item.tip"
                                                                                         class="form-control"
                                                                                         :name="'model[form_list]['+index+'][tip]'">
                                                 </div>

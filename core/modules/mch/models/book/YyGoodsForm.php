@@ -38,7 +38,7 @@ class YyGoodsForm extends Model
     public $label;
     public $form_list = [];
     public $service_list=[];
-
+    public $declaration;
 
     /**
      * @inheritdoc
@@ -51,7 +51,7 @@ class YyGoodsForm extends Model
             [['detail', 'cover_pic','label'], 'string'],
             [['cat_id', 'sort', 'virtual_sales', 'store_id'], 'integer'],
             [['name','shop_id'], 'string', 'max' => 255],
-            [['service'], 'string', 'max' => 2000],
+            [['service','declaration'], 'string', 'max' => 2000],
             [['goods_pic_list','form_list','service_list'], 'safe',],
             [['virtual_sales'], 'default', 'value' => 0]
         ];
@@ -141,9 +141,17 @@ class YyGoodsForm extends Model
                 $goods->status = 2;
                 $goods->sales = 0;
             }
-
+            $goods->declaration=$this->declaration;
             $goods->attributes = $this->attributes;
 
+            $prizes=[];
+
+            foreach ($this->form_list AS $form){
+
+                $data= array('year'=>$form['default'],'prize'=>$form['tip']);
+                array_push($prizes,$data);
+            }
+             $goods->prize=json_encode($prizes);
             if ($goods->save()) {
                 YyGoodsPic::updateAll(['is_delete' => 1], ['goods_id' => $goods->id]);
                 foreach ($this->goods_pic_list as $pic_url) {
@@ -155,7 +163,6 @@ class YyGoodsForm extends Model
                 }
 
                 YyForm::updateAll(['is_delete' => 1], ['goods_id'=>$goods->id]);
-
                 foreach ($this->form_list AS $form){
                     $form_list = new YyForm();
                     $form_list->goods_id = $goods->id;
@@ -165,6 +172,7 @@ class YyGoodsForm extends Model
                     $form_list->required = $form['required'];
                     $form_list->default = $form['default'];
                     $form_list->tip = $form['tip'];
+
                     $form_list->sort = $form['sort'];
                     $form_list->is_delete = 0;
                     $form_list->addtime = time();

@@ -10,11 +10,13 @@ namespace app\modules\mch\controllers;
 
 
 use app\models\IntegralLog;
+use app\models\JiFenSetting;
 use app\models\Level;
 use app\models\Shop;
 use app\models\Store;
 use app\models\User;
 use app\models\UserCoupon;
+use app\modules\mch\models\JiFenSettingForm;
 use app\modules\mch\models\LevelForm;
 use app\modules\mch\models\LevelListForm;
 use app\modules\mch\models\UserCardListForm;
@@ -438,4 +440,37 @@ class UserController extends Controller
             'shop'=>$shop,
         ]);
     }
+
+
+    public function actionJifenList(){
+        $form=new JiFenSettingForm();
+        $form->store_id=$this->store->id;
+        $jifen_list=  $form->getList();
+        return $this->render('jifen-list', [
+            'jifen_list' => $jifen_list,
+        ]);
+
+    }
+
+
+    public function actionJifenEdit($id = null)
+    {
+        $jifen = JiFenSetting::findOne(['id' => $id]);
+        if (!$jifen) {
+            $jifen = new JiFenSetting();
+        }
+        $form = new JiFenSettingForm();
+        if (\Yii::$app->request->isPost) {
+            $model = \Yii::$app->request->post('model');
+            $model['store_id'] = $this->store->id;
+            $form->attributes = $model;
+            $form->jifen=$jifen;
+            return json_encode($form->save(), JSON_UNESCAPED_UNICODE);
+        }
+
+        return $this->render('jifen-edit', [
+            'list' => $jifen,
+        ]);
+    }
+
 }

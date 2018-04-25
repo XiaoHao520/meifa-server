@@ -29,6 +29,7 @@ use Yii;
  * @property string $shop_id
  * @property integer $is_refund
  * @property string $form_id
+ * @property  string $datetime
  */
 class YyOrder extends \yii\db\ActiveRecord
 {
@@ -49,7 +50,7 @@ class YyOrder extends \yii\db\ActiveRecord
             [['goods_id', 'user_id', 'order_no', 'store_id', 'form_id'], 'required'],
             [['goods_id', 'user_id', 'is_pay', 'pay_type', 'pay_time', 'is_use', 'is_comment', 'apply_delete', 'addtime', 'is_delete', 'is_cancel', 'store_id', 'use_time', 'clerk_id', 'shop_id', 'is_refund'], 'integer'],
             [['total_price', 'pay_price'], 'number'],
-            [['offline_qrcode'], 'string'],
+            [['offline_qrcode','datetime'], 'string'],
             [['order_no', 'form_id'], 'string', 'max' => 255],
         ];
     }
@@ -82,6 +83,7 @@ class YyOrder extends \yii\db\ActiveRecord
             'shop_id' => '自提门店ID',
             'is_refund' => '是否退款',
             'form_id' => '表单ID',
+            'datetime'=>'预约的时间'
         ];
     }
 }

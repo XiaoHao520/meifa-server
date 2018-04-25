@@ -41,6 +41,7 @@ class OrderController extends Controller
         $form->store_id = $this->store->id;
         $form->user_id = \Yii::$app->user->id;
         $form->goods_id = \Yii::$app->request->get('gid');
+
         $this->renderJson($form->search());
     }
 
@@ -55,6 +56,7 @@ class OrderController extends Controller
         $form->store_id = $this->store->id;
         $form->user_id = \Yii::$app->user->id;
         $form->goods_id = $model['gid'];
+        $form->datetime = $model['datetime'];
         $form->form_list = json_decode($model['form_list'],true);
         $form->form_id = $model['form_id'];
         $this->renderJson($form->save());

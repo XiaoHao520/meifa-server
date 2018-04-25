@@ -227,6 +227,15 @@ class MchMenu
                         ],
                     ],
                     [
+                        'name' => '积分设置',
+                        'route' => 'mch/user/jifen-list',
+                        'sub' => [
+                            'mch/user/jifen-edit',
+
+                        ],
+
+                    ],
+                    [
                         'name' => '核销员',
                         'route' => 'mch/user/clerk',
                     ],
