@@ -381,6 +381,11 @@ $this->params['active_nav_group'] = 11;
                     name: '分销中心',
                     url: '/pages/share/index',
                 },
+                {
+                    name:'我要买单',
+                    url:"/pages/md/index/index"
+
+                }
             ],
         },
     });

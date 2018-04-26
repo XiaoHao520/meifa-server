@@ -302,7 +302,7 @@ class DefaultController extends Controller
     {
         $navigation_bar_color = Option::get('navigation_bar_color', $this->store->id, 'app', [
             'frontColor' => '#000000',
-            'backgroundColor' => '#ffffff',
+            'backgroundColor' => '#97AB48',
         ]);
         return $this->renderJson([
             'code' => 0,
