@@ -55,7 +55,7 @@ class GoodsForm extends Model
     public $share_type;
     public $quick_purchase;
     public $hot_cakes;
-
+    public $times;
 
     /**
      * @return array
@@ -65,7 +65,7 @@ class GoodsForm extends Model
         return [
             [['name', 'service', 'unit'], 'trim'],
             [['store_id', 'name', 'price', 'cat_id', 'detail', 'goods_pic_list', 'cover_pic'], 'required'],
-            [['store_id', 'sort', 'virtual_sales', 'freight', 'share_type','quick_purchase','hot_cakes'], 'integer'],
+            [['store_id', 'sort', 'virtual_sales', 'freight', 'share_type','quick_purchase','hot_cakes','times'], 'integer'],
             [['price', 'original_price', 'weight'], 'number'],
             [['price',], 'number', 'min' => 0.01,],
             [['detail', 'service', 'cover_pic', 'video_url',], 'string'],
@@ -106,6 +106,7 @@ class GoodsForm extends Model
             'full_cut' => '满减',
             'integral' => '积分设置',
             'goods_num' => '商品库存',
+            'times'=>'商品可使用次数'
         ];
     }
 

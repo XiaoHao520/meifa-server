@@ -311,6 +311,16 @@ if (!$returnUrl)
                     </div>
                     <div class="form-group row">
                         <div class="col-3 text-right">
+                            <label class=" col-form-label required">使用次数</label>
+                        </div>
+                        <div class="col-9">
+                            <input class="form-control short-row" type="text" name="model[times]"
+                                   value="<?= $goods['times'] ?>">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-3 text-right">
                             <label class=" col-form-label">单位</label>
                         </div>
                         <div class="col-9">

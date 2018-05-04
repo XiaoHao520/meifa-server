@@ -81,6 +81,7 @@ class GoodsForm extends Model
                 'unit' => $goods->unit,
                 'miaosha' => $this->getMiaoshaData($goods->id),
                 'use_attr' => intval($goods->use_attr),
+                'times'=>$goods->times
             ],
         ];
     }

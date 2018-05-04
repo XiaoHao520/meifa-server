@@ -28,9 +28,16 @@ class AddressSaveForm extends Model
     {
         return [
             [['name', 'mobile', 'province_id', 'city_id', 'district_id', 'detail',], 'trim'],
-            [['name', 'mobile', 'province_id', 'city_id', 'district_id', 'detail',], 'required'],
+            [['name', 'mobile'], 'required'],
             [['address_id',], 'integer'],
         ];
+
+
+       /* return [
+            [['name', 'mobile', 'province_id', 'city_id', 'district_id', 'detail',], 'trim'],
+            [['name', 'mobile', 'province_id', 'city_id', 'district_id', 'detail',], 'required'],
+            [['address_id',], 'integer'],
+        ];*/
     }
 
     public function attributeLabels()
@@ -65,9 +72,9 @@ class AddressSaveForm extends Model
         }
         $address->name = $this->name;
         $address->mobile = $this->mobile;
-        $address->detail = $this->detail;
+       // $address->detail = $this->detail;
 
-        $province = District::findOne($this->province_id);
+       /* $province = District::findOne($this->province_id);
         if (!$province) {
             return [
                 'code' => 1,
@@ -95,7 +102,7 @@ class AddressSaveForm extends Model
             ];
         }
         $address->district_id = $district->id;
-        $address->district = $district->name;
+        $address->district = $district->name;*/
 
         if ($address->save()) {
             return [
